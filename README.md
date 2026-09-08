@@ -13,8 +13,9 @@ Hundreds of concurrent users can claim blocks on a shared 30×30 (900 blocks) bo
 ## 📋 Assignment Submission Form Answers
 
 ### 1. Deployed App Link / Running Locally
+- **Live Render Backend (WebSockets & REST):** `https://pixelgrid-1zp1.onrender.com`
 - **Local Development App:** `http://localhost:5173` (Frontend) & `http://localhost:5000` (Backend REST & WebSockets)
-- **Deployment Ready:** Frontend configured for **Vercel**; Backend configured for **Render / Railway / Fly.io**; Database compatible with **Neon PostgreSQL** or local **SQLite**.
+- **Deployment Ready:** Frontend configured for **Vercel**; Backend deployed on **Render**; Database connected to **MongoDB Atlas Cloud**.
 
 ### 2. GitHub Repository Link
 - **Repository:** Public Git Repo (`https://github.com/surjeetkumar8006/PixelGrid`)

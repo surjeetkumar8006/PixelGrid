@@ -9,7 +9,11 @@ import {
   UserCursor,
 } from '../types';
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
+const SOCKET_URL =
+  import.meta.env.VITE_SOCKET_URL ||
+  (import.meta.env.PROD
+    ? 'https://pixelgrid-1zp1.onrender.com'
+    : 'http://localhost:5000');
 
 export function useSocket(initialUser: UserProfile | null) {
   const socketRef = useRef<Socket | null>(null);
