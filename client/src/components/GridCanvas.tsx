@@ -222,7 +222,17 @@ export const GridCanvas: React.FC<GridCanvasProps> = ({
 
     if (gridX >= 0 && gridX < COLS && gridY >= 0 && gridY < ROWS) {
       const id = gridY * COLS + gridX;
-      return blockMap.current.get(id) || null;
+      return (
+        blockMap.current.get(id) || {
+          id,
+          x: gridX,
+          y: gridY,
+          ownerId: null,
+          ownerName: null,
+          ownerColor: null,
+          claimedAt: null,
+        }
+      );
     }
     return null;
   };
@@ -249,9 +259,9 @@ export const GridCanvas: React.FC<GridCanvasProps> = ({
 
   // Mouse Down Event Handler
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    setStartPan({ x: e.clientX, y: e.clientY });
     if (e.button === 0 && (e.shiftKey || e.altKey)) {
       setIsPanning(true);
-      setStartPan({ x: e.clientX, y: e.clientY });
     }
   };
 
@@ -261,7 +271,9 @@ export const GridCanvas: React.FC<GridCanvasProps> = ({
 
   // Click Cell Event Handler
   const handleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (isPanning) return;
+    const dragDistance = Math.hypot(e.clientX - startPan.x, e.clientY - startPan.y);
+    if (dragDistance > 6) return; // Ignore drag movements
+
     const { worldX, worldY } = screenToWorld(e.clientX, e.clientY);
     const cell = getCellFromWorldCoords(worldX, worldY);
     if (cell) {

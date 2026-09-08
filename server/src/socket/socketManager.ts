@@ -74,12 +74,37 @@ export function setupSocketIO(io: Server) {
     // Real-time Block Claim Request
     socket.on(
       'block:claim',
-      async (data: { blockId: number; expectedPreviousOwnerId?: string | null }) => {
-        const user = onlineUsersMap.get(socket.id);
+      async (data: {
+        blockId: number;
+        expectedPreviousOwnerId?: string | null;
+        userId?: string;
+        username?: string;
+        userColor?: string;
+      }) => {
+        let user = onlineUsersMap.get(socket.id);
+
+        // Auto-register user session if socket reconnected or missing in memory
+        if (!user && data.username) {
+          try {
+            const dbUser = await getOrCreateUser(data.username.trim(), data.userColor);
+            user = {
+              id: dbUser.id,
+              username: dbUser.username,
+              color: dbUser.color,
+              socketId: socket.id,
+              joinedAt: new Date(),
+            };
+            onlineUsersMap.set(socket.id, user);
+            socket.emit('user:profile', dbUser);
+          } catch (err) {
+            console.error('Auto-register socket user error:', err);
+          }
+        }
+
         if (!user) {
           socket.emit('claim:rejected', {
             blockId: data.blockId,
-            reason: 'You must set a username first!',
+            reason: 'Please enter your username first!',
           });
           return;
         }

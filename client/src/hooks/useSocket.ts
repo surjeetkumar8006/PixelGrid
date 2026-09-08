@@ -235,6 +235,9 @@ export function useSocket(initialUser: UserProfile | null) {
         socketRef.current.emit('block:claim', {
           blockId,
           expectedPreviousOwnerId,
+          userId: currentUser.id,
+          username: currentUser.username,
+          userColor: currentUser.color,
         });
 
         // Set local 3s cooldown visual timer
