@@ -3,7 +3,7 @@ import http from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { seedGridIfNeeded } from './db';
+import { connectDB } from './db';
 import { setupSocketIO } from './socket/socketManager';
 import {
   handleUserJoin,
@@ -46,7 +46,7 @@ setupSocketIO(io);
 // Initialize DB and start server
 async function main() {
   try {
-    await seedGridIfNeeded();
+    await connectDB();
     server.listen(PORT, () => {
       console.log(`=================================`);
       console.log(`🚀 Server running on port ${PORT}`);

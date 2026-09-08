@@ -5,7 +5,7 @@ import {
   getGlobalStats,
   claimBlockAtomic,
   getOrCreateUser,
-  prisma,
+  resetGridData,
   TOTAL_BLOCKS,
 } from '../db';
 import { ActivityItem, UserProfile } from '../types';
@@ -166,9 +166,7 @@ export function setupSocketIO(io: Server) {
     // Reset Grid (Demo/Admin Utility)
     socket.on('grid:reset', async () => {
       try {
-        await prisma.block.updateMany({
-          data: { ownerId: null, claimedAt: null },
-        });
+        await resetGridData();
 
         const resetGrid = await getGridSnapshot();
         const leaderboard = await getLeaderboard();
