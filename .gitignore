@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Production Builds
+dist/
+build/
+.output/
+
+# Local Environment Variables & SQLite Database
+.env
+*.db
+*.db-journal
+server/dev.db
+server/dev.db-journal
+
+# Logs & Temporary Files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE & System Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Prisma Artifacts
+server/prisma/*.db
