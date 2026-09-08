@@ -281,14 +281,17 @@ export const GridCanvas: React.FC<GridCanvasProps> = ({
     }
   };
 
-  // Mouse Wheel Zoom
-  const handleWheel = (e: React.WheelEvent<HTMLCanvasElement>) => {
-    e.preventDefault();
-    const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
-    const newZoom = Math.min(2.8, Math.max(0.4, zoom * zoomFactor));
+  // Native Non-Passive Wheel Event Listener (Prevents Chrome passive listener console warnings)
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-    if (canvasRef.current) {
-      const rect = canvasRef.current.getBoundingClientRect();
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
+      const newZoom = Math.min(2.8, Math.max(0.4, zoom * zoomFactor));
+
+      const rect = canvas.getBoundingClientRect();
       const mouseX = e.clientX - rect.left;
       const mouseY = e.clientY - rect.top;
 
@@ -297,8 +300,11 @@ export const GridCanvas: React.FC<GridCanvasProps> = ({
 
       setZoom(newZoom);
       setPan({ x: newPanX, y: newPanY });
-    }
-  };
+    };
+
+    canvas.addEventListener('wheel', onWheel, { passive: false });
+    return () => canvas.removeEventListener('wheel', onWheel);
+  }, [zoom, pan]);
 
   // Zoom Controls
   const handleZoomIn = () => setZoom((prev) => Math.min(2.8, prev + 0.25));
@@ -354,7 +360,6 @@ export const GridCanvas: React.FC<GridCanvasProps> = ({
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onClick={handleClick}
-        onWheel={handleWheel}
         className={`w-full h-full ${
           isPanning ? 'cursor-grabbing' : 'cursor-pointer'
         }`}
